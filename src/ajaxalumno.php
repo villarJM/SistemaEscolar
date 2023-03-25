@@ -14,15 +14,30 @@ if (isset($_GET['id'])) {
     echo json_encode($datos);
     die();
 } else if (isset($_GET['idnum'])) {
-    $dato = array();
-    $idalumno = $_GET['idnum'];
-    $idmateria = $_GET['idmate'];
-    $idprofesor = $_GET['idprof'];
-    $grupo = $_GET['grup'];
-    $datos = [$idalumno, $idmateria, $idprofesor, $grupo];
-    $queryGrupo = mysqli_query($conexion, "INSERT INTO `grupos` (`idasignatura`, `idprofesor`, `idnumcon`, `grupo`) VALUES ('$idmateria', '$idprofesor', $idalumno, '$grupo')");
-    array_push($dato, $datos);
-    echo json_encode($dato);
+    $alertG = array();
+    $alert;
+    if (empty($_POST['idnum']) || empty($_POST['idmate']) || empty($_POST['idmate']) || empty($_POST['idprof'])) {
+        $alert = "empty";
+    } else {
+        $idalumno = $_GET['idnum'];
+        $idmateria = $_GET['idmate'];
+        $idprofesor = $_GET['idprof'];
+        $grupo = $_GET['grup'];
+        $query = mysqli_query($conexion, "SELECT * FROM grupos WHERE idnumcon = $idalumno AND idasignatura = '$idmateria'");
+        $result = mysqli_fetch_array($query);
+        if ($result > 0) {
+            $alert = "occupied";
+        } else {
+            $queryGrupo = mysqli_query($conexion, "INSERT INTO `grupos` (`idasignatura`, `idprofesor`, `idnumcon`, `grupo`) VALUES ('$idmateria', '$idprofesor', $idalumno, '$grupo')");
+            if ($queryGrupo) {
+                $alert = true;
+            } else {
+                $alert = false;
+            }
+        }
+    }
+    array_push($alertG, $alert);
+    echo json_encode($alertG);
     die();
 } else if (isset($_GET['idmat'])) {
     $id = $_GET['idmat'];

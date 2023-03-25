@@ -16,13 +16,13 @@ $(document).ready(function () {
                 <td class="numero">${element.idnumcon}</td>
                 <td class="numero">${element.nombrea}</td>
                 <td>
-                  <input list="materias" style="width: 100px" id="materialist" class="numero"></input>
+                  <input list="materias" style="width: 100px" id="materialist" class="mate"></input>
                   <datalist id="materias">
 
                   </datalist>
                 </td>
                 <td>
-                  <input list="profesores" style="width: 100px" id="profesorlist" class="pro"></input>
+                  <input type="text" list="profesores" style="width: 100px" id="profesorlist" class="pro"></input>
                   <datalist id="profesores">
 
                   </datalist></td>
@@ -33,7 +33,67 @@ $(document).ready(function () {
               listarMateria(val);
               listarProfesor(val);
         }
-        buscar();
+        $(".agregar").click(function() {
+          let grupo = $('#grupo').val();
+          console.log(grupo);
+          var valores = "";
+          $(this).parents("tr").find(".numero").each(function () {
+            valores += $(this).html() + "\n";
+          });
+          const array = valores.split("\n");
+          let idalumno = array[0];
+          console.log(idalumno);
+          let idasignatura = $(this).parents('tr').find('.mate').val();
+          console.log(idasignatura);
+          let idprofesor = $(this).parents('tr').find('.pro').val();
+          console.log(idprofesor);
+          $.ajax({
+            type: "POST",
+            url: "ajaxalumno.php?idnum=" + idalumno + "&idmate=" + idasignatura + "&idprof=" + idprofesor + "&grup=" + grupo,
+            data: "",
+            dataType: "json",
+            success: function (response) {
+              for (const key in response) {
+                  const element = response[key];
+                  console.log(element);
+                  if (element === true) {
+                    Swal.fire({
+                      position: 'top-end',
+                      icon: 'success',
+                      title: 'Registrado',
+                      showConfirmButton: false,
+                      timer: 2000
+                  })
+                  } else if (element === false) {
+                    Swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'No Registrado',
+                      showConfirmButton: false,
+                      timer: 2000
+                  })
+                  } else if (element === "empty") {
+                      Swal.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Todo los campos son obligatorio',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                  } else if (element === "occupied") {
+                    Swal.fire({
+                      position: 'top-end',
+                      icon: 'info',
+                      title: 'Ya Registrado!!',
+                      showConfirmButton: false,
+                      timer: 2000
+                  })
+                  }
+              }
+              
+            }
+          });
+        });
       }
     });
     
@@ -49,7 +109,6 @@ function listarMateria(val) {
     success: function (response) {
       for (const key in response) {
         const asignatura = response[key];
-        console.log(response[key]);
         fila.innerHTML += `<option value="${asignatura.idasignatura}" id="mat">Materia: ${asignatura.asignatura}</option>`;
       }
     }
@@ -64,37 +123,11 @@ function listarProfesor(val) {
     dataType: "json",
     success: function (response) {
       for (const key in response) {
+        console.log(response[key])
         const profesor = response[key];
-        console.log(response[key]);
         fila.innerHTML += `<option value="${profesor.idprofesor}">Nombre: ${profesor.profesor}</option>`;
       }
     }
   })
 }
 
-function buscar(){
-  $(".agregar").click(function() {
-    var valores = "";
-    let grupo = $('#grupo').val();
-    console.log(grupo);
-    
-
-    // Obtenemos la fila 2
-    let obtenerFila = document.getElementById("fila1");
-
-    // Obtenemos todos los td de la fila
-    let elementosFila = obtenerFila.getElementsByTagName("td");
-    
-    // Iteramos los elementos de la fila para mostrarlos uno por uno.
-    for (let i=0; i<=4; i++) {
-      console.log(elementosFila[i].innerText);
-    }
-
-    let profesora = $("#profesorlist").val();
-    console.log(profesora);
-    $(this).parents("tr").find(".numero").each(function() {
-      valores += $(this).html() + "\n";
-    });
-    console.log(valores);
-  });
-}

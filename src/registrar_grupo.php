@@ -13,42 +13,6 @@ $existe = mysqli_fetch_all($sql);
 if (empty($existe) && $id_user != 1) {
     header("Location: permisos.php");
 }
-if (!empty($_POST)) {
-    $alert = "";
-    if (empty($_POST['grupo']) || empty($_POST['idalumno']) || empty($_POST['idmateria']) || empty($_POST['idprofesor'])) {
-        $alert = '<div class="alert alert-danger" role="alert">
-                                    Todo los campos son obligatorio
-                                </div>';
-    } else {
-        $grupo = $_POST['grupo'];
-        $idalumno = $_POST['idalumno'];
-        $idmateria = $_POST['idmateria'];
-        $idprofesor = $_POST['idprofesor'];
-        $usuario_id = $_SESSION['idUser'];
-        $result = 0;
-        $query = mysqli_query($conexion, "SELECT * FROM grupos WHERE idnumcon = $idalumno AND idasignatura = '$idmateria'");
-        $result = mysqli_fetch_array($query);
-        if ($result > 0) {
-            $alert = '<div class="alert alert-danger" role="alert">
-                                    El alumno ya pertenece a un grupo
-                                </div>';
-        } else {
-            
-            $queryInsert = "INSERT INTO `grupos` (`idasignatura`, `idprofesor`, `idnumcon`, `grupo`) VALUES ('$idmateria', '$idprofesor', $idalumno, '$grupo')";
-            $query_insert = mysqli_query($conexion, $queryInsert);
-            if ($query_insert) {
-                $alert = '<div class="alert alert-success" role="alert">
-                                    Registrado
-                                </div>';
-            } else {
-                $alert = '<div class="alert alert-danger" role="alert">
-                                    Error al registrar
-                            </div>';
-            }
-        }
-    }
-    mysqli_close($conexion);
-}
 ?>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <button class="btn btn-primary mb-2" type="button" data-toggle="modal" data-target="#nuevo_cliente"><i class="fas fa-plus"></i></button>
@@ -151,6 +115,9 @@ if (!empty($_POST)) {
                                         
                                     </tbody>
                             </table>
+                            <div class="alerta">
+                                
+                            </div>
                         </div>
                     </div>
             </div>
