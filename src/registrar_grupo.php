@@ -33,7 +33,7 @@ if (empty($existe) && $id_user != 1) {
             <?php
             include "../conexion.php";
 
-            $query = mysqli_query($conexion, "SELECT g.idgrupo, g.grupo, a.nombre, a.apellido, ag.asignatura, p.nombrep, p.apellidop FROM grupos g INNER JOIN alumnos a ON g.idnumcon = a.idnumcon INNER JOIN asignatura ag ON g.idasignatura = ag.idasignatura INNER JOIN profesores p ON g.idprofesor = p.idprofesor");
+            $query = mysqli_query($conexion, "SELECT g.idgrupo, gr.grupo, a.nombre, a.apellido, ag.asignatura, p.nombrep, p.apellidop FROM grupos g INNER JOIN grupo gr ON g.idgrupo = gr.idgrupo INNER JOIN alumnos a ON g.idnumcon = a.idnumcon INNER JOIN asignatura ag ON g.idasignatura = ag.idasignatura INNER JOIN profesores p ON g.idprofesor = p.idprofesor");
             $result = mysqli_num_rows($query);
             if ($result > 0) {
                 while ($data = mysqli_fetch_assoc($query)) {
@@ -73,11 +73,25 @@ if (empty($existe) && $id_user != 1) {
                         <label for="grupo">Grupo</label>
                         <input class="form-control" list="grupos" name="grupo" id="grupo" placeholder="Seleccione el Grupo." required>
                         <datalist id="grupos">
-                            <option value="A"></option>
-                            <option value="B"></option>
-                            <option value="C"></option>
-                            <option value="D"></option>
-                        </datalist>
+                                <?php
+                                    $consulta = "SELECT * FROM grupo";
+                                    $resultado = mysqli_query($conexion , $consulta);
+                                    while($grupo = mysqli_fetch_assoc($resultado)){?>
+                                    <option id="grup" value="<?php echo $grupo["idgrupo"]; ?>">GRUPO: <?php echo $grupo["grupo"]; ?></option>
+                                <?php }?>
+                            </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo">Semestre</label>
+                        <input class="form-control" list="semestres" name="semestre" id="semestre" placeholder="Seleccione el Semestre." required>
+                        <datalist id="semestres">
+                                <?php
+                                    $consulta = "SELECT * FROM semestre";
+                                    $resultado = mysqli_query($conexion , $consulta);
+                                    while($semestre = mysqli_fetch_assoc($resultado)){?>
+                                    <option id="sems" value="<?php echo $semestre["idsemestre"]; ?>">SEMESTRE: <?php echo $semestre["semestre"]; ?></option>
+                                <?php }?>
+                            </datalist>
                     </div>
                     <div class="row">
                         <div class="col-lg-4">

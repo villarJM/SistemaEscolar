@@ -36,6 +36,8 @@ $(document).ready(function () {
         $(".agregar").click(function() {
           let grupo = $('#grupo').val();
           console.log(grupo);
+          let idsemestre = $('#semestre').val();
+          console.log(idsemestre);
           var valores = "";
           $(this).parents("tr").find(".numero").each(function () {
             valores += $(this).html() + "\n";
@@ -49,13 +51,13 @@ $(document).ready(function () {
           console.log(idprofesor);
           $.ajax({
             type: "POST",
-            url: "ajaxalumno.php?idnum=" + idalumno + "&idmate=" + idasignatura + "&idprof=" + idprofesor + "&grup=" + grupo,
+            url: "ajaxalumno.php?idnum=" + idalumno + "&idmate=" + idasignatura + "&idprof=" + idprofesor + "&grup=" + grupo + "&idsem=" + idsemestre,
             data: "",
             dataType: "json",
             success: function (response) {
               for (const key in response) {
                   const element = response[key];
-                  console.log(element);
+                  console.log("Array:"+element);
                   if (element === true) {
                     Swal.fire({
                       position: 'top-end',
@@ -101,13 +103,15 @@ $(document).ready(function () {
 });
 function listarMateria(val) {
   const fila = document.querySelector("#materias");
+  let idsemestre = $('#semestre').val();
   $.ajax({
     type: "POST",
-    url: "ajaxalumno.php?idmat=" + val,
+    url: "ajaxalumno.php?idmat=" + val + "&ids=" + idsemestre,
     data: "",
     dataType: "json",
     success: function (response) {
       for (const key in response) {
+        console.log(response[key]);
         const asignatura = response[key];
         fila.innerHTML += `<option value="${asignatura.idasignatura}" id="mat">Materia: ${asignatura.asignatura}</option>`;
       }

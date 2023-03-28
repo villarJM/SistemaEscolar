@@ -1,0 +1,29 @@
+while($grupoResult = mysqli_fetch_assoc($queryGrupo)) {
+            
+            if($idgrupo === $grupoResult['idgrupo'] && $idalumno === $grupoResult['idalumno'] && $idmateria === $grupoResult['idmateria']){
+                // comprobar si un alumno ya pertenece a un grupo y con una materia específica.
+                $alert = "occupied";
+                echo $alert;
+                return;
+            } else if ($idgrupo === $grupoResult['idgrupo'] && $idalumno === $grupoResult['idalumno']) {
+                // registarar alumno en el mismo grupo, con una materia diferente.
+                $queryGrupo = mysqli_query($conexion, "INSERT INTO `grupos` (`idgrupo`,`idasignatura`, `idprofesor`, `idnumcon`) VALUES ('$idgrupo','$idmateria', '$idprofesor', $idalumno)");
+                if ($queryGrupo) {
+                    $alert = true;
+                } else {
+                    $alert = false;
+                }
+                return;
+            } else if ($idgrupo !== $grupoResult['idgrupo'] && $idalumno === $grupoResult['idalumno']) {
+                // invalidar si el grupo es diferente y el alumno es igual
+                $alert = false;
+            } else {
+                $queryGrupo = mysqli_query($conexion, "INSERT INTO `grupos` (`idgrupo`,`idasignatura`, `idprofesor`, `idnumcon`) VALUES ('$idgrupo','$idmateria', '$idprofesor', $idalumno)");
+                if ($queryGrupo) {
+                    $alert = true;
+                } else {
+                    $alert = false;
+                }
+                return;
+            }
+        }

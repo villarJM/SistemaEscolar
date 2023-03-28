@@ -22,7 +22,7 @@ if (!empty($_POST)) {
         $semestre = $_POST['semestre'];
         $usuario_id = $_SESSION['idUser'];
         $result = 0;
-        $query = mysqli_query($conexion, "SELECT * FROM reticula WHERE idcarrera = $idcarrera AND idasignatura = '$idasignatura' AND nombre_ret = '$reticula' AND semestre = '$semestre'");
+        $query = mysqli_query($conexion, "SELECT * FROM reticula WHERE idmatricula = '$idcarrera' AND idasignatura = '$idasignatura' AND nombre_ret = '$reticula' AND semestre = '$semestre'");
         $result = mysqli_fetch_array($query);
         if ($result > 0) {
             $alert = '<div class="alert alert-danger" role="alert">
@@ -30,7 +30,7 @@ if (!empty($_POST)) {
                                 </div>';
         } else {
             
-            $queryInsert = "INSERT INTO `reticula` (`idcarrera`, `idasignatura`, `nombre_ret`, `semestre`, `estado`) VALUES ($idcarrera, '$idasignatura', '$reticula', '$semestre', 1)";
+            $queryInsert = "INSERT INTO `reticula` (`idmatricula`, `idasignatura`, `nombre_ret`, `semestre`, `estado`) VALUES ('$idcarrera', '$idasignatura', '$reticula', '$semestre', 1)";
             $query_insert = mysqli_query($conexion, $queryInsert);
             if ($query_insert) {
                 $alert = '<div class="alert alert-success" role="alert">
@@ -69,7 +69,7 @@ if (!empty($_POST)) {
             <?php
             include "../conexion.php";
 
-            $query = mysqli_query($conexion, "SELECT r.idreticula, r.nombre_ret, c.carrera, r.semestre, a.idasignatura, a.asignatura, a.creditoteo, a.creditopra, a.totalcredito, r.estado FROM reticula r INNER JOIN carrera c ON r.idcarrera = c.idmatricula INNER JOIN asignatura a ON r.idasignatura = a.idasignatura");
+            $query = mysqli_query($conexion, "SELECT r.idreticula, r.nombre_ret, c.carrera, r.semestre, a.idasignatura, a.asignatura, a.creditoteo, a.creditopra, a.totalcredito, r.estado FROM reticula r INNER JOIN carrera c ON r.idmatricula = c.idmatricula INNER JOIN asignatura a ON r.idasignatura = a.idasignatura");
             $result = mysqli_num_rows($query);
             if ($result > 0) {
                 while ($data = mysqli_fetch_assoc($query)) {
@@ -104,7 +104,7 @@ if (!empty($_POST)) {
         </tbody>
 
     </table>
-    <a href="pdf/pdfreticula.php" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
+    <a href="pdf\pdfreticula.php" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
 </div>
 <div id="nuevo_cliente" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
     <div class="modal-dialog" role="document">

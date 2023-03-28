@@ -14,12 +14,13 @@ if (!empty($_POST)) {
     } else {
         $idcarrera = 0;
         $carrera = $_POST['carrera'];
-        $sqlid = mysqli_query($conexion,"SELECT idmatricula FROM carrera WHERE carrera = '$carrera'");
-        if ($data = mysqli_fetch_array($sqlid)) {
-            $idcarrera = $data['idmatricula'];
+        $idcarrera = $_POST['idcarrera'];
+        $sqlid = mysqli_query($conexion,"SELECT idmatricula FROM carrera WHERE idmatricula = '$idcarrera'");
+        $data = mysqli_fetch_array($sqlid);
+        if ($data > 0) {
+            $sql_update = mysqli_query($conexion, "UPDATE carrera SET carrera = '$carrera' WHERE idmatricula = '$idcarrera'");
+            $alert = '<div class="alert alert-success" role="alert">Carrera Actualizado</div>';
         }
-        $sql_update = mysqli_query($conexion, "UPDATE carrera SET carrera = '$carrera' WHERE idmatricula = $idcarrera");
-        $alert = '<div class="alert alert-success" role="alert">Profesor Actualizado</div>';
     }
 }
 
@@ -29,7 +30,7 @@ if (empty($_REQUEST['id'])) {
     header("Location: registrar_carreras.php");
 }
 $idusuario = $_REQUEST['id'];
-$sql = mysqli_query($conexion, "SELECT * FROM carrera");
+$sql = mysqli_query($conexion, "SELECT * FROM carrera WHERE idmatricula = '$idusuario'");
 $result_sql = mysqli_num_rows($sql);
 if ($result_sql == 0) {
     header("Location: registrar_carreras.php");
@@ -44,7 +45,7 @@ if ($result_sql == 0) {
     <div class="col-md-6 mx-auto">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                Modificar Profesor
+                Modificar Carrera
             </div>
             <div class="card-body">
                 <form class="" action="" method="post">

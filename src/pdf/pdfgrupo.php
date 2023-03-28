@@ -10,7 +10,7 @@ $pdf->Ln(20);
 $pdf->SetTitle("Lista de Grupos");
 $pdf->SetFont('Arial', 'B', 12);
 
-$grupo = mysqli_query($conexion, "SELECT g.idgrupo, g.grupo, a.nombre, a.apellido, ag.asignatura, p.nombrep, p.apellidop FROM grupos g INNER JOIN alumnos a ON g.idnumcon = a.idnumcon INNER JOIN asignatura ag ON g.idasignatura = ag.idasignatura INNER JOIN profesores p ON g.idprofesor = p.idprofesor");
+$grupo = mysqli_query($conexion, "SELECT g.idgrupo, gr.grupo, a.nombre, a.apellido, ag.asignatura, p.nombrep, p.apellidop FROM grupos g INNER JOIN grupo gr ON g.idgrupo = gr.idgrupo INNER JOIN alumnos a ON g.idnumcon = a.idnumcon INNER JOIN asignatura ag ON g.idasignatura = ag.idasignatura INNER JOIN profesores p ON g.idprofesor = p.idprofesor");
 
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetFillColor(0, 0, 0);
